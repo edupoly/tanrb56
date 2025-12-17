@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import Todolist from './Todolist'
 
-import { queryOptions } from '@tanstack/react-query'
+import { mutationOptions, queryOptions } from '@tanstack/react-query'
 
 export const todosQueryOptions = queryOptions({
     queryKey:['todos'],
@@ -12,6 +12,18 @@ export const todosQueryOptions = queryOptions({
     }
 })
 
+// 2. Add this NEW logic for POST (adding a todo)
+export const createTodo = async (todo: { title: string }) => {
+    const res = await fetch("http://localhost:3500/todos", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(todo),
+    })
+    if (!res.ok) throw new Error('Failed to create todo')
+    return res.json()
+}
 
 export const Route = createFileRoute('/todolist/')({
   loader: ({ context: { queryClient } }) => {
