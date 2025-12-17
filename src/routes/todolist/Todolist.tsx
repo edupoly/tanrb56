@@ -1,15 +1,16 @@
 
-import React from 'react'
+import { useSuspenseQuery } from '@tanstack/react-query'
+import { todosQueryOptions } from '.'
 
 function Todolist() {
-  const [todos,setTodos] = React.useState(['goto goa','play cricket','buy books'])
+var {data:todos} = useSuspenseQuery(todosQueryOptions)
   return (
     <div>
-      <h1>Todolist</h1>
+      <h1 className='text-2xl text-bold'>Todolist</h1>
       <ul>
         {
           todos.map((t)=>{
-            return <li>{t}</li>
+            return <li key={t.title}>{t.title}</li>
           })
         }
       </ul>
