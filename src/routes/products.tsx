@@ -1,6 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { queryOptions } from '@tanstack/react-query'
-import Products from './Products'
+import Products from './products/Products'
 
 export const productsQueryOptions = queryOptions({
     queryKey:['products'],
@@ -11,10 +11,15 @@ export const productsQueryOptions = queryOptions({
     }
 })
 
-export const Route = createFileRoute('/products/')({
+export const Route = createFileRoute('/products')({
   loader: ({ context: { queryClient } }) => {
     return queryClient.ensureQueryData(productsQueryOptions)
   },
-  component: Products,
+  component: ()=>{
+    return (<div>
+      <Outlet></Outlet>
+      <Products></Products>
+    </div>)
+  },
 })
 

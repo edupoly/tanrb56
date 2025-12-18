@@ -9,9 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ProductsRouteImport } from './routes/products'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TodolistIndexRouteImport } from './routes/todolist/index'
-import { Route as ProductsIndexRouteImport } from './routes/products/index'
 import { Route as CounterIndexRouteImport } from './routes/counter/index'
 import { Route as ProductsProductidRouteImport } from './routes/products/$productid'
 import { Route as DemoStartServerFuncsRouteImport } from './routes/demo/start.server-funcs'
@@ -22,6 +22,11 @@ import { Route as DemoStartSsrSpaModeRouteImport } from './routes/demo/start.ssr
 import { Route as DemoStartSsrFullSsrRouteImport } from './routes/demo/start.ssr.full-ssr'
 import { Route as DemoStartSsrDataOnlyRouteImport } from './routes/demo/start.ssr.data-only'
 
+const ProductsRoute = ProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -32,20 +37,15 @@ const TodolistIndexRoute = TodolistIndexRouteImport.update({
   path: '/todolist/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProductsIndexRoute = ProductsIndexRouteImport.update({
-  id: '/products/',
-  path: '/products/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CounterIndexRoute = CounterIndexRouteImport.update({
   id: '/counter/',
   path: '/counter/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductsProductidRoute = ProductsProductidRouteImport.update({
-  id: '/products/$productid',
-  path: '/products/$productid',
-  getParentRoute: () => rootRouteImport,
+  id: '/$productid',
+  path: '/$productid',
+  getParentRoute: () => ProductsRoute,
 } as any)
 const DemoStartServerFuncsRoute = DemoStartServerFuncsRouteImport.update({
   id: '/demo/start/server-funcs',
@@ -85,9 +85,9 @@ const DemoStartSsrDataOnlyRoute = DemoStartSsrDataOnlyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/products': typeof ProductsRouteWithChildren
   '/products/$productid': typeof ProductsProductidRoute
   '/counter': typeof CounterIndexRoute
-  '/products': typeof ProductsIndexRoute
   '/todolist': typeof TodolistIndexRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
@@ -99,9 +99,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/products': typeof ProductsRouteWithChildren
   '/products/$productid': typeof ProductsProductidRoute
   '/counter': typeof CounterIndexRoute
-  '/products': typeof ProductsIndexRoute
   '/todolist': typeof TodolistIndexRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
@@ -114,9 +114,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/products': typeof ProductsRouteWithChildren
   '/products/$productid': typeof ProductsProductidRoute
   '/counter/': typeof CounterIndexRoute
-  '/products/': typeof ProductsIndexRoute
   '/todolist/': typeof TodolistIndexRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
@@ -130,9 +130,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/products'
     | '/products/$productid'
     | '/counter'
-    | '/products'
     | '/todolist'
     | '/demo/api/names'
     | '/demo/start/api-request'
@@ -144,9 +144,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/products'
     | '/products/$productid'
     | '/counter'
-    | '/products'
     | '/todolist'
     | '/demo/api/names'
     | '/demo/start/api-request'
@@ -158,9 +158,9 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/products'
     | '/products/$productid'
     | '/counter/'
-    | '/products/'
     | '/todolist/'
     | '/demo/api/names'
     | '/demo/start/api-request'
@@ -173,9 +173,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ProductsProductidRoute: typeof ProductsProductidRoute
+  ProductsRoute: typeof ProductsRouteWithChildren
   CounterIndexRoute: typeof CounterIndexRoute
-  ProductsIndexRoute: typeof ProductsIndexRoute
   TodolistIndexRoute: typeof TodolistIndexRoute
   DemoApiNamesRoute: typeof DemoApiNamesRoute
   DemoStartApiRequestRoute: typeof DemoStartApiRequestRoute
@@ -188,6 +187,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/products': {
+      id: '/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof ProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -202,13 +208,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TodolistIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/products/': {
-      id: '/products/'
-      path: '/products'
-      fullPath: '/products'
-      preLoaderRoute: typeof ProductsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/counter/': {
       id: '/counter/'
       path: '/counter'
@@ -218,10 +217,10 @@ declare module '@tanstack/react-router' {
     }
     '/products/$productid': {
       id: '/products/$productid'
-      path: '/products/$productid'
+      path: '/$productid'
       fullPath: '/products/$productid'
       preLoaderRoute: typeof ProductsProductidRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof ProductsRoute
     }
     '/demo/start/server-funcs': {
       id: '/demo/start/server-funcs'
@@ -275,11 +274,22 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface ProductsRouteChildren {
+  ProductsProductidRoute: typeof ProductsProductidRoute
+}
+
+const ProductsRouteChildren: ProductsRouteChildren = {
+  ProductsProductidRoute: ProductsProductidRoute,
+}
+
+const ProductsRouteWithChildren = ProductsRoute._addFileChildren(
+  ProductsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ProductsProductidRoute: ProductsProductidRoute,
+  ProductsRoute: ProductsRouteWithChildren,
   CounterIndexRoute: CounterIndexRoute,
-  ProductsIndexRoute: ProductsIndexRoute,
   TodolistIndexRoute: TodolistIndexRoute,
   DemoApiNamesRoute: DemoApiNamesRoute,
   DemoStartApiRequestRoute: DemoStartApiRequestRoute,

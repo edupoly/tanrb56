@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
 import React from 'react'
-import { productsQueryOptions } from './index'
+import { productsQueryOptions } from '../products'
 import { Link, Outlet } from "@tanstack/react-router"
 
 function Products() {
@@ -9,7 +9,6 @@ function Products() {
   return (
     <div>
       <h1>Products</h1>
-      <Outlet></Outlet>
       <ul>
         {
           products.map((product)=>{
