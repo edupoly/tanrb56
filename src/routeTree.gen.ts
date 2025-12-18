@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as TodolistIndexRouteImport } from './routes/todolist/index'
 import { Route as ProductsIndexRouteImport } from './routes/products/index'
 import { Route as CounterIndexRouteImport } from './routes/counter/index'
+import { Route as ProductsProductidRouteImport } from './routes/products/$productid'
 import { Route as DemoStartServerFuncsRouteImport } from './routes/demo/start.server-funcs'
 import { Route as DemoStartApiRequestRouteImport } from './routes/demo/start.api-request'
 import { Route as DemoApiNamesRouteImport } from './routes/demo/api.names'
@@ -39,6 +40,11 @@ const ProductsIndexRoute = ProductsIndexRouteImport.update({
 const CounterIndexRoute = CounterIndexRouteImport.update({
   id: '/counter/',
   path: '/counter/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductsProductidRoute = ProductsProductidRouteImport.update({
+  id: '/products/$productid',
+  path: '/products/$productid',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoStartServerFuncsRoute = DemoStartServerFuncsRouteImport.update({
@@ -79,6 +85,7 @@ const DemoStartSsrDataOnlyRoute = DemoStartSsrDataOnlyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/products/$productid': typeof ProductsProductidRoute
   '/counter': typeof CounterIndexRoute
   '/products': typeof ProductsIndexRoute
   '/todolist': typeof TodolistIndexRoute
@@ -92,6 +99,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/products/$productid': typeof ProductsProductidRoute
   '/counter': typeof CounterIndexRoute
   '/products': typeof ProductsIndexRoute
   '/todolist': typeof TodolistIndexRoute
@@ -106,6 +114,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/products/$productid': typeof ProductsProductidRoute
   '/counter/': typeof CounterIndexRoute
   '/products/': typeof ProductsIndexRoute
   '/todolist/': typeof TodolistIndexRoute
@@ -121,6 +130,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/products/$productid'
     | '/counter'
     | '/products'
     | '/todolist'
@@ -134,6 +144,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/products/$productid'
     | '/counter'
     | '/products'
     | '/todolist'
@@ -147,6 +158,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/products/$productid'
     | '/counter/'
     | '/products/'
     | '/todolist/'
@@ -161,6 +173,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ProductsProductidRoute: typeof ProductsProductidRoute
   CounterIndexRoute: typeof CounterIndexRoute
   ProductsIndexRoute: typeof ProductsIndexRoute
   TodolistIndexRoute: typeof TodolistIndexRoute
@@ -201,6 +214,13 @@ declare module '@tanstack/react-router' {
       path: '/counter'
       fullPath: '/counter'
       preLoaderRoute: typeof CounterIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/products/$productid': {
+      id: '/products/$productid'
+      path: '/products/$productid'
+      fullPath: '/products/$productid'
+      preLoaderRoute: typeof ProductsProductidRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo/start/server-funcs': {
@@ -257,6 +277,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ProductsProductidRoute: ProductsProductidRoute,
   CounterIndexRoute: CounterIndexRoute,
   ProductsIndexRoute: ProductsIndexRoute,
   TodolistIndexRoute: TodolistIndexRoute,
