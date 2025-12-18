@@ -13,7 +13,7 @@ export const todosQueryOptions = queryOptions({
 })
 
 // 2. Add this NEW logic for POST (adding a todo)
-export const createTodo = async (todo: { title: string }) => {
+export const createTodo = async (todo: any) => {
     const res = await fetch("http://localhost:3500/todos", {
         method: 'POST',
         headers: {

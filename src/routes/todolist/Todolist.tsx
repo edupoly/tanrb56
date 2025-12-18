@@ -5,15 +5,18 @@ import { useState } from 'react'
 
 function Todolist() {
   var [newTodo,setNewTodo]=useState('')
+
   const queryClient = useQueryClient()
-var {data:todos} = useSuspenseQuery(todosQueryOptions)
-const mutation = useMutation({
+  var {data:todos} = useSuspenseQuery(todosQueryOptions)
+
+  const mutation = useMutation({
     mutationFn: createTodo, // <--- We use the imported function here
     onSuccess: () => {
       // Refresh the list immediately after adding
       queryClient.invalidateQueries({ queryKey: ['todos'] })
     },
   })
+  
   return (
     <div>
       <h1 className='text-2xl text-bold'>Todolist</h1>
